@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WebDriverManager.DriverConfigs.Impl;
 
@@ -28,13 +29,14 @@ namespace SeleniumLearning
         public void LoginPage()
         {
             string[] expectedProducts = {"iphone X","Blackberry"};
+            string[] actualProducts = new string[2];
 
             driver.FindElement(By.Id("username")).SendKeys("rahulshettyacademy");
             driver.FindElement(By.Id("password")).SendKeys("learning");
             driver.FindElement(By.XPath("//div[@class='form-group']/label/span/input")).Click();
             driver.FindElement(By.Name("signin")).Click();
 
-            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(20));
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.
             ElementIsVisible(By.PartialLinkText("Checkout")));
 
@@ -54,9 +56,29 @@ namespace SeleniumLearning
             }
 
             driver.FindElement(By.PartialLinkText("Checkout")).Click();
-              
 
             
+            IList<IWebElement> checkoutCards = driver.FindElements(By.CssSelector("h4 a"));
+            for(int i = 0; i < checkoutCards.Count; i++)
+            {
+                actualProducts[i] = checkoutCards[i].Text;
+
+            }
+
+            Assert.AreEqual(expectedProducts, actualProducts);
+
+            driver.FindElement(By.CssSelector(".btn-success")).Click();
+            driver.FindElement(By.Id("country")).SendKeys("bel");
+            wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementIsVisible(By.PartialLinkText("Belarus")));
+
+            driver.FindElement(By.PartialLinkText("Belarus")).Click();
+
+            driver.FindElement(By.XPath("//*[@for='checkbox2']")).Click();
+            driver.FindElement(By.CssSelector("[value='Purchase']")).Click();
+            string confrimText = driver.FindElement(By.CssSelector(".alert-success")).Text;
+
+            StringAssert.Contains("Success!", confrimText);
+
 
         }
 

@@ -41,8 +41,8 @@ namespace SeleniumLearning
             wait.Until(SeleniumExtras.WaitHelpers.ExpectedConditions.ElementToBeClickable(By.Id("okayBtn")));
             driver.FindElement(By.Id("okayBtn")).Click();
             
-            bool result = driver.FindElement(By.Id("usertype")).Selected;
-            Assert.IsFalse(result);
+          //  bool result = driver.FindElement(By.Id("usertype")).Selected;
+           // Assert.IsFalse(result);
             
             IWebElement drop = driver.FindElement(By.CssSelector("select.form-control"));
             SelectElement select = new SelectElement(drop);
@@ -54,7 +54,7 @@ namespace SeleniumLearning
         [TearDown]
         public void TearDown()
         {
-            //driver.Close();
+            driver.Close();
         }
 
     }
